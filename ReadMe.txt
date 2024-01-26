@@ -2,6 +2,8 @@ POLICY TRANSPARENCY CHINA
 
 This repository contains all the code and datasets collected and processed for the POLICY TRANSPARENCY CHINA project by Vincent Brussee (Leiden University), to be published in an academic journal soon (tm). It primarily relies on Python and Jupyter Notebooks. It is provided to the public for reuse and review.
 
+This project is funded by the Dutch Research Council (NWO) under file number 406.22.CTW.013. 
+
 **Installing and running**
 
 Each script has been tested to run on a Windows machine with the Anaconda environment file supplied. 
@@ -18,7 +20,7 @@ The repository contains the following datasets:
 - A dataset containing multiple Excel sheets (under Document number datasets), retrieved from the official websites of the organs concerned in Summer 2023. It consists of the following parameters:
 --- url: URL of the document 
 --- pub_date_parsed: Publishing dates of the documents, extracted from the page of the URL
---- doc_number: The document numberor 文号 in Chinese
+--- doc_number: The document number or 文号 in Chinese
 
 - A dataset of referenced titles (Dataset for Table_1_2, Fig_4.xlsx). This has been generated using CreateCrossReferencedDataset.py and consists of the following parameters:
 --- title: The title of the document being referred to (original)
@@ -46,7 +48,7 @@ The repository contains the following datasets:
 
 Not included are one dataset and one code file:
 -- Dataset: data.xlsx
--- Code: the Scraper.py used to collect all the data.xlsx
+-- Code: the Scraper.py used to collect the data.xlsx
 
 
 
