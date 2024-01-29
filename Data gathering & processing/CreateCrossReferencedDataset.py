@@ -13,7 +13,7 @@ import numpy as np
 from functools import partial
 from multiprocessing import Pool, Process
 
-# set this to max processor cores your system can dedicate to this task
+# set this to the max # of processor cores your system can dedicate to this task
 num_processes = 5
 
 class CrossReference():

@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.common.exceptions import WebDriverException, SessionNotCreatedException
@@ -10,6 +12,7 @@ from get_chrome_driver import GetChromeDriver
 
 from multiprocessing import Process
 
+# set this to the max # of processor cores your system can dedicate to this task
 num_processes = 1
 
 class Scraper():
@@ -37,22 +40,28 @@ class Scraper():
         
         # manually-specified countries to get results from
         countries = ["台湾", "香港", "日本", "韩国", "美国", "荷兰", "泰国", "新加坡", "俄罗斯"]
+        # create empty dataframe
         cols = countries + ["url"]
         checked_data = pd.DataFrame(columns=cols)
+        # start driver
         self.start_driver()
         print("driver started")
         
+        # iterate through all the data points within this range for multiprocessing
         for i in range(range_start, range_end, range_interval):
+            # remove all http(s) headers
             location = df["Url"][i].replace("http://","").replace("https://","")
-                
+            # generate and get tester url
             url = f"https://tool.chinaz.com/speedworld/{location}"
             self.driver.get(url)
             time.sleep(10)
             
+            # check status
             row = self.check_status(countries)
+            # append results to dataframe
             to_save = row + [df["Url"][i]]
             checked_data.loc[i] = to_save
-        
+            # save to excel
             checked_data.to_excel(f".//main__{str(range_start)}.xlsx")
         
     def check_status(self, countries):
@@ -69,20 +78,25 @@ class Scraper():
             List with availability of each website per server (in order as countries).
 
         """
-        # finds box
-        try:
-            speedlist = self.driver.find_element(By.ID, "speedlist")
-            rows = speedlist.find_elements(By.CLASS_NAME, "row.listw.clearfix")
-        except:
-            time.sleep(15)
-            try:
-                speedlist = self.driver.find_element(By.ID, "speedlist")
-                rows = speedlist.find_elements(By.CLASS_NAME, "row.listw.clearfix")
-            except:
-                # if box not found after two attempts, assume no result found
-                return [None, None, None, None, None, None, None, None, None]
-            
+        
         def check_available_status(country, rows):
+            """
+            Checks the status of the website for any specified country. Iterates through each row
+            of rows to check whether or not the country is present, then returns the first positive result
+
+            Parameters
+            ----------
+            country : Str
+                Country (in Chinese) to check 
+            rows : Selenium WebElement
+                Rows that contain each website result from the results.
+
+            Returns
+            -------
+            Str
+                HTTP status code or "unavailable" if website time out
+
+            """
             
             def wait(row):
                 """
@@ -121,7 +135,21 @@ class Scraper():
                             return str(status_code)
             # if no results found, indicate 'unavailable' for failure to reach server
             return "unavailable"
-
+        
+        # finds box
+        try:
+            speedlist = self.driver.find_element(By.ID, "speedlist")
+            rows = speedlist.find_elements(By.CLASS_NAME, "row.listw.clearfix")
+        except:
+            time.sleep(15)
+            try:
+                speedlist = self.driver.find_element(By.ID, "speedlist")
+                rows = speedlist.find_elements(By.CLASS_NAME, "row.listw.clearfix")
+            except:
+                # if box not found after two attempts, assume no result found
+                return [None, None, None, None, None, None, None, None, None]
+        
+        # get results
         results = []
         for country in countries:
             results.append(check_available_status(country, rows))
@@ -176,10 +204,12 @@ class Scraper():
 
 if __name__ == "__main__":
     
+    # load datasets
     national_websites = pd.read_excel("./national_websites.xlsx")
     local_websites = pd.read_excel("./national_websites.xlsx")
     df = pd.concat([national_websites, local_websites])
-
+    
+    # execute multiprocessing
     processes = []
     for i in range(num_processes):
         print(f"Process {str(i)} starting")
@@ -189,7 +219,8 @@ if __name__ == "__main__":
     
     for process in processes:
         process.join() 
-
+    
+    # stitch dataframes back together
     cross_referenced = pd.DataFrame()
     for i in range(num_processes):
         df = pd.read_excel(f".//main__{str(i)}.xlsx")

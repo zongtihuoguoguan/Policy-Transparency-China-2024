@@ -1,37 +1,61 @@
 # -*- coding: utf-8 -*-
-"""
-Created on Mon Oct  9 14:37:12 2023
-
-@author: brusseevwd1
-"""
 
 import pandas as pd
 import requests
 from bs4 import BeautifulSoup
-import re
 import time
 import numpy as np
 from functools import partial
-from multiprocessing import Pool, Process
+from multiprocessing import Process
 
 from selenium import webdriver
 from selenium.webdriver.common.by import By
-from selenium.webdriver.support.ui import WebDriverWait
-from selenium.webdriver.support import expected_conditions as EC
-from selenium.common.exceptions import NoSuchElementException, UnexpectedAlertPresentException, WebDriverException, TimeoutException, ElementClickInterceptedException, ElementNotInteractableException, InvalidArgumentException, StaleElementReferenceException, SessionNotCreatedException
-from selenium.webdriver.firefox.options import Options
-from selenium.webdriver.chrome.service import Service
+from selenium.common.exceptions import WebDriverException, SessionNotCreatedException
 
 import os
 
-from get_gecko_driver import GetGeckoDriver
 from get_chrome_driver import GetChromeDriver
+
+# set this to the max # of processor cores your system can dedicate to this task
+num_processes = 5
 
 class Check():
     def __init__(self, data_to_check, i, round_):
+        """
+        Uses Selenium and BeautifulSoup4/Requests to detect whether or not a link is still available. 
+        BS4 for first round, then goes over errors for a second time with Selenium to check for 
+        any errors related to scraper detection.
+
+        Parameters
+        ----------
+        data_to_check : Pandas DataFrame
+            Dataset with all the links to check.
+        i : Int
+            Number of the process for multiprocessing
+        round_ : Int
+            Number of the check round (1=BeautifulSoup, 2=Selenium)
+
+        Returns
+        -------
+        None. Instead, saves data to Excel to be stiched back together later. 
+
+        """
         results = []
 
         def check_availability(url):
+            """
+
+            Parameters
+            ----------
+            url : Str
+                Url to check availability of
+
+            Returns
+            -------
+            Int
+                The http status code of the website 
+
+            """
             user_agt = "'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/83.0.4103.53 Safari/537.36'"
             headers = {'User-Agent': user_agt}
             try:
@@ -56,6 +80,21 @@ class Check():
                 return "webpage unavailable"
         
         def check_availability_selenium(url, driver):
+            """
+            
+            Parameters
+            ----------
+            url : Str
+                Url to check availability of
+            driver : Selenium Webdriver
+                Selenium Webdriver to execute
+
+            Returns
+            -------
+            Var
+                Page status code, or "webpage unavailable" if website remains unavailable
+
+            """
             try:
                 driver.get(url)
             except:
@@ -70,7 +109,7 @@ class Check():
             
         
         if round_ == 1:
-            
+            # iterate through all urls to check
             for url in data_to_check["Link"]:
                 results.append(check_availability(url))
             data_to_check["result"] = results
@@ -79,12 +118,10 @@ class Check():
         if round_ == 2:
             
             def start_webdriver():
+                """
+                Starts Chrome webdriver, installs via GetChromeDriver if not working first time
+                """
                 
-                """
-                TODO: changing user agents
-                """
-
-                    
                 options = webdriver.ChromeOptions() 
                 options.add_argument("start-maximized")
                 options.add_experimental_option("excludeSwitches", ["enable-automation"])
@@ -121,8 +158,10 @@ class Check():
             driver = start_webdriver()
             print("webdriver started")
             
+            # iterate through all urls to check
             for j in range(len(data_to_check)):
-            
+                
+                # only re-run error results
                 if str(data_to_check["result"][j]) in ["403", "408", "412", "420", "502", "521"]:
                     result = check_availability_selenium(data_to_check["Link"][j], driver)
                     if result:
@@ -142,9 +181,9 @@ if __name__ == "__main__":
     """
     
     #ROUND 1 CODE
-    
     data = pd.read_excel("data.xlsx")
     
+    #create random sample of 50 links from each unique database
     checked = pd.DataFrame()
     for database in data["Database"].unique():
         results = [] 
@@ -155,12 +194,12 @@ if __name__ == "__main__":
         df = df[["Database", "Link"]]
         checked = checked.append(df)
     
-    num_processes = 5
+    #break dataframe up in chunks for multiprocessing
     dataframes = np.array_split(checked, num_processes)
-    checked_data = pd.DataFrame()
     func = partial(Check)
     processes = []
     
+    #execute round 1 
     for i in range(num_processes):
         print(f"process {str(i)} starting")
         process_data = dataframes[i].reset_index(drop=True)
@@ -170,6 +209,7 @@ if __name__ == "__main__":
     for process in processes:
         process.join() 
     
+    #stich round 1 back together
     cross_referenced = pd.DataFrame()
     for i in range(num_processes):
         df = pd.read_excel(f".//data_{str(i)}.xlsx")
@@ -177,14 +217,13 @@ if __name__ == "__main__":
     cross_referenced.to_excel(".//checked_round_1.xlsx")
     
     #ROUND 2 CODE
-    checked = pd.read_excel("checked_round_1.xlsx")
        
-    num_processes = 5
-    dataframes = np.array_split(checked, num_processes)
-    checked_data = pd.DataFrame()
+    #break dataframe up in chunks for multiprocessing
+    dataframes = np.array_split(cross_referenced, num_processes)
     func = partial(Check)
     processes = []
     
+    #execute round 2
     for i in range(num_processes):
         print(f"process {str(i)} starting")
         process_data = dataframes[i].reset_index(drop=True)
@@ -194,6 +233,7 @@ if __name__ == "__main__":
     for process in processes:
         process.join() 
     
+    # execute round 2
     cross_referenced = pd.DataFrame()
     for i in range(num_processes):
         df = pd.read_excel(f".//data_{str(i)}.xlsx")
