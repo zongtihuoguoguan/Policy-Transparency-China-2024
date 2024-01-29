@@ -1,8 +1,6 @@
 POLICY TRANSPARENCY CHINA
 
-This repository contains all the code and datasets collected and processed for the POLICY TRANSPARENCY CHINA project by Vincent Brussee (Leiden University), to be published in an academic journal soon (tm). It primarily relies on Python and Jupyter Notebooks. It is provided to the public for reuse and review.
-
-This project is funded by the Dutch Research Council (NWO) under file number 406.22.CTW.013. 
+This repository contains all the code and datasets collected and processed for the POLICY TRANSPARENCY CHINA project, to be published in an academic journal soon (tm). It primarily relies on Python and Jupyter Notebooks. It is provided to the public for reuse and review.
 
 **Installing and running**
 
@@ -46,7 +44,7 @@ The repository contains the following datasets:
 
 - The results of the test for geoblocking (Dataset for Fig_6_7_8.xlsx). This is generated through CheckGeoblocking.py. It displays the result per server by displaying its HTTP status code. 
 
-Not included are one dataset and one code file:
+Not included in this repository are one dataset and one code file:
 -- Dataset: data.xlsx
 -- Code: the Scraper.py used to collect the data.xlsx
 
