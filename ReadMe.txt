@@ -7,7 +7,7 @@ This repository contains all the code and datasets collected and processed for t
 Each script has been tested to run on a Windows machine with the Anaconda environment file supplied. 
 -- CheckDeletion.py: checks from a dataset whether or not the documents are still available today. The sample used for the paper can be found in "Dataset for Fig_5.xlsx". 
 -- CheckGeoblocking.py: takes in the files "local_websites.xlsx"  and "national_websites.xlsx" to check whether the websites can be accessed from multiple locations across the world. Generates the file needed for figures 6-8. 
--- CreateCrossReferencedDataset.py: takes in a dataset of policy documents ("data.xlsx", not provided here) and creates the file needed for Tables 1-2, and Figure 4. 
+-- CreateCrossReferencedDataset.py: takes in a dataset of policy documents ("data.xlsx", only a sample provided here) and creates the file needed for Tables 1-2, and Figure 4. 
 
 The analysis files are subdivided by the figures/tables they correspond with.
 
@@ -44,9 +44,16 @@ The repository contains the following datasets:
 
 - The results of the test for geoblocking (Dataset for Fig_6_7_8.xlsx). This is generated through CheckGeoblocking.py. It displays the result per server by displaying its HTTP status code. 
 
-Not included in this repository are one dataset and one code file:
--- Dataset: data.xlsx
--- Code: the Scraper.py used to collect the data.xlsx
-
+NOTE: Not included in this repository is the raw scraped data ("data.xlsx"). Instead, only a sample of 50 documents has been provided. This consists of the following parameters:
+- Database: source of data
+- administrative_level: central, provincial or sub-provincial level document (parsed from text)
+- Date: issuing date (parsed from text)
+- Publishing date: publishing date (sometimes different from issuing date)
+- Year: publishing year (derived from "Date")
+- Link: source url the document was retrieved from
+- main_issuer: the issuing agency of a document (parsed from text)
+- permanence: whether a document is a trial/pilot, temporary, or full document
+- Title: title of document
+- Body: body text or "error" if the scraper returned an error (for instance, if the text was provided as an image). No OCR was used in creating this. 
 
 
