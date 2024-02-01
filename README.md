@@ -1,8 +1,8 @@
-POLICY TRANSPARENCY CHINA
+<h1>POLICY TRANSPARENCY CHINA</h1>
 
 This repository contains all the code and datasets collected and processed for the POLICY TRANSPARENCY CHINA project, to be published in an academic journal soon (tm). It primarily relies on Python and Jupyter Notebooks. It is provided to the public for reuse and review.
 
-**Installing and running**
+<h2>Installing and running</h2>
 
 Each script has been tested to run on a Windows machine with the Anaconda environment file supplied. 
 -- CheckDeletion.py: checks from a dataset whether or not the documents are still available today. The sample used for the paper can be found in "Dataset for Fig_5.xlsx". 
@@ -11,7 +11,7 @@ Each script has been tested to run on a Windows machine with the Anaconda enviro
 
 The analysis files are subdivided by the figures/tables they correspond with.
 
-**Datasets**
+<h2>Datasets</h2>
 
 The repository contains the following datasets:
 
