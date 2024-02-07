@@ -15,12 +15,12 @@ The analysis files are subdivided by the figures/tables they correspond with.
 
 The repository contains the following datasets:
 
-- A dataset containing multiple Excel sheets (under Document number datasets), retrieved from the official websites of the organs concerned in Summer 2023. It consists of the following parameters:
+A dataset containing multiple Excel sheets (under Document number datasets), retrieved from the official websites of the organs concerned in Summer 2023. It consists of the following parameters:
 -   url: URL of the document
 -   pub_date_parsed: Publishing dates of the documents, extracted from the page of the URL
 -   doc_number: The document number or 文号 in Chinese
 
-- A dataset of referenced titles (Dataset for Table_1_2, Fig_4.xlsx). This has been generated using CreateCrossReferencedDataset.py and consists of the following parameters:
+A  dataset of referenced titles (Dataset for Table_1_2, Fig_4.xlsx). This has been generated using CreateCrossReferencedDataset.py and consists of the following parameters:
 -   title: The title of the document being referred to (original)
 -   cleaned_title: The title of the document being referred to (stripped down to only Chinese characters and numbers)
 -   referral_date: the publishing date of the document making the referral
@@ -29,7 +29,7 @@ The repository contains the following datasets:
 -   fulltext_pub_date: year that the referred-to document was found
 -   fulltext_url: URL of the referred-to document
 
-- A dataset of policies on Open Government Information (Dataset for Fig_1.xlsx). This has been scraped from official government websites. See the paper for more details. It consists of the following parameters:
+The dataset of policies on Open Government Information (Dataset for Fig_1.xlsx). This has been scraped from official government websites. See the paper for more details. It consists of the following parameters:
 -   Database: source website
 -   Date: issuing date of the policy
 -   Year: issuing year of the policy
@@ -37,12 +37,12 @@ The repository contains the following datasets:
 -   Title: original title of the document
 -   Body: body text of the document (in some cases, shows an "error" or "nan" if no content was found, e.g. if the content was in image format)
 
-- The results of the test for deletion of documents (Dataset for Fig_5.xlsx). This is generated through CheckDeletion.py. The parameters are:
+The results of the test for deletion of documents (Dataset for Fig_5.xlsx). This is generated through CheckDeletion.py. The parameters are:
 -   Database: source website
 -   Link: URL of the document
 -   Result: HTTP status code
 
-- The results of the test for geoblocking (Dataset for Fig_6_7_8.xlsx). This is generated through CheckGeoblocking.py. It displays the result per server by displaying its HTTP status code. 
+The results of the test for geoblocking (Dataset for Fig_6_7_8.xlsx). This is generated through CheckGeoblocking.py. It displays the result per server by displaying its HTTP status code. 
 
 NOTE: Not included in this repository is the raw scraped data ("data.xlsx"). Instead, only a sample of 50 documents has been provided. This consists of the following parameters:
 - Database: source of data
