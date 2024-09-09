@@ -6,7 +6,6 @@ This repository contains all the code and datasets collected and processed for t
 
 Each script has been tested to run on a Windows machine with the Anaconda environment file supplied. 
 - CheckDeletion.py: checks from a dataset whether or not the documents are still available today. The sample used for the paper can be found in "Dataset for Fig_5.xlsx". 
-- CheckGeoblocking.py: takes in the files "local_websites.xlsx"  and "national_websites.xlsx" to check whether the websites can be accessed from multiple locations across the world. Generates the file needed for figures 6-8. 
 - CreateCrossReferencedDataset.py: takes in a dataset of policy documents ("data.xlsx", only a sample provided here) and creates the file needed for Tables 1-2, and Figure 4. 
 
 The analysis files are subdivided by the figures/tables they correspond with.
@@ -41,8 +40,6 @@ The results of the test for deletion of documents (Dataset for Fig_5.xlsx). This
 -   Database: source website
 -   Link: URL of the document
 -   Result: HTTP status code
-
-The results of the test for geoblocking (Dataset for Fig_6_7_8.xlsx). This is generated through CheckGeoblocking.py. It displays the result per server by displaying its HTTP status code. 
 
 NOTE: Not included in this repository is the raw scraped data ("data.xlsx"). Instead, only a sample of 50 documents has been provided. This consists of the following parameters:
 - Database: source of data
